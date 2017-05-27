@@ -1,5 +1,7 @@
 package com.example.tag.myalarm04;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -63,14 +65,26 @@ public class MainActivity extends AppCompatActivity {
 
                         // IDを取得する
                         alarmData = alarmDatas.get(position);
-                        int DeleteAlarmId = alarmData.getAlarmID();
-                        dbAdapter.open();
-                        dbAdapter.deleteAlarm(DeleteAlarmId);
-                        dbAdapter.close();
-                        loadAlarm();
+                        int deleteAlarmId = alarmData.getAlarmID();
 
+                        //TBLから削除
+                        dbAdapter.open();
+                        dbAdapter.deleteAlarm(deleteAlarmId);
+                        dbAdapter.close();
+
+                        //pendingintentも削除
+                        Intent deleteIntent = new Intent(MainActivity.this,AlarmStopActivity.class);
+                        deleteIntent.setType(String.valueOf(deleteAlarmId));
+                        PendingIntent pendingIntent1 = PendingIntent.getActivity(MainActivity.this,0,deleteIntent,0);
+                        pendingIntent1.cancel();
+
+                        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                        alarmManager.cancel(pendingIntent1);
+
+                        loadAlarm();
                     }
                 });
+
                 builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

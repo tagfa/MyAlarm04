@@ -31,8 +31,7 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_alarm);
 
-        Intent intent1 = new Intent(this,AlarmStopActivity.class);
-        final PendingIntent pendingIntent1 = PendingIntent.getActivity(this,0,intent1,0);
+        final Intent intent1 = new Intent(this,AlarmStopActivity.class);
 
         final AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         fragmentManager = getFragmentManager();
@@ -67,21 +66,25 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
                                 calendar.get(Calendar.MINUTE)+"分にアラームをセットします。",
                         Toast.LENGTH_LONG).show();
 
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(),pendingIntent1);
-
                 EditText inputAlarmName = (EditText)findViewById(R.id.inputAlarmName);
                 String alarmName = inputAlarmName.getText().toString();
 
                 dbAdapter = new DBAdapter(NewAlarmActivity.this);
                 dbAdapter.open();
-                dbAdapter.saveAlarm(alarmName,
+                int insertAlarmID = dbAdapter.saveAlarm(
+                        alarmName,
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH),
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE));
                 dbAdapter.close();
+
+                intent1.setType(String.valueOf(insertAlarmID));
+                PendingIntent pendingIntent1 = PendingIntent.getActivity(NewAlarmActivity.this,0,intent1,0);
+
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(),pendingIntent1);
 
                 Intent intent2=new Intent(NewAlarmActivity.this,MainActivity.class);
                 startActivity(intent2);

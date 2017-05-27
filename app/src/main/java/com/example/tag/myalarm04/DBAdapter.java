@@ -62,7 +62,7 @@ public class DBAdapter {
         return db.query(TABLE_NAME, null, null, null, null, null, null);
     }
 
-    public void saveAlarm(String alarmName,int year,int month,int day,int hour,int minute){
+    public int saveAlarm(String alarmName,int year,int month,int day,int hour,int minute){
         ContentValues values = new ContentValues();
 
         values.put(ALARMNAME,alarmName);
@@ -73,8 +73,19 @@ public class DBAdapter {
         values.put(MINUTE,minute);
 
         long status = db.insert(TABLE_NAME, null, values);
+        Cursor c = db.query(TABLE_NAME,
+                null,  //columns
+                null,  //selection
+                null,  //selectionArgs
+                null,  //groupby
+                null,  //having
+                ALARMID+" desc"); //orderby
+
         long recodeCount = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         System.out.printf("recodeCount : " + recodeCount);
+        c.moveToFirst();
+        int deleteAlarmID = c.getInt(c.getColumnIndex(DBAdapter.ALARMID));
+        return deleteAlarmID;
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
