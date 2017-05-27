@@ -1,10 +1,13 @@
 package com.example.tag.myalarm04;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<AlarmData>alarmDatas;
     private ListView alarmListView;
+    protected AlarmData alarmData;
 
     private Intent intent;
 
@@ -46,6 +50,41 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        alarmListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("削除");
+                builder.setMessage("削除しますか？");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // IDを取得する
+                        alarmData = alarmDatas.get(position);
+                        int DeleteAlarmId = alarmData.getAlarmID();
+                        dbAdapter.open();
+                        dbAdapter.deleteAlarm(DeleteAlarmId);
+                        dbAdapter.close();
+                        loadAlarm();
+
+                    }
+                });
+                builder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                // ダイアログの表示
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                return false;
+            }
+        });
+
+
 
     }
 
