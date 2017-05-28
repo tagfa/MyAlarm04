@@ -69,7 +69,7 @@ public class AlarmListAdapter extends BaseAdapter {
             TextView name = (TextView) view.findViewById(R.id.alarmName);
             name.setText(alarm.getAlarmName());
             TextView alarmTime =(TextView)view.findViewById(R.id.alarmTime);
-            alarmTime.setText(alarm.getHour()+":"+alarm.getMinute());
+            alarmTime.setText(alarm.getMonth()+"月"+ alarm.getDay()+"日 "+ alarm.getHour()+":"+ String.format("%2d",alarm.getMinute()) );
 
         }
         return view;

@@ -42,7 +42,7 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        textView.setText(hour+":"+minute);
+        textView.setText(hour+":"+ String.format("%2d",minute) );
 
         Button button1 = (Button)findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
