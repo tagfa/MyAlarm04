@@ -2,7 +2,14 @@ package com.example.tag.myalarm04;
 
 import android.app.*;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +31,12 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
     TextView textView;
     Calendar calendar;
 
+    TextView soundFileName;
+    String soundFilePath;
     static DBAdapter dbAdapter;
+
+    public static final int RINGTONE_PICKER = 1;
+    private Uri mUri;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +54,9 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        textView.setText(hour+":"+ String.format("%2d",minute) );
+        final RingtoneManager manager = new RingtoneManager(getApplicationContext());
+        manager.setType(RingtoneManager.TYPE_ALARM);
+
 
         Button button1 = (Button)findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +64,19 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
             public void onClick(View v) {
                 TimePickerDialog timePickerFragment = new TimePickerDialog();
                 timePickerFragment.show(fragmentManager,"test");
+            }
+        });
+
+        Button soundSelectButton = (Button)findViewById(R.id.soundSelectButton);
+        soundSelectButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Cursor cursor = manager.getCursor();
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "アラーム選択");
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM); // アラーム音
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false);// デフォルトは表示しない
+                startActivityForResult(intent, RINGTONE_PICKER);
             }
         });
 
@@ -77,7 +104,8 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
                         calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH),
                         calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE));
+                        calendar.get(Calendar.MINUTE),
+                        mUri);
                 dbAdapter.close();
 
                 intent1.setType(String.valueOf(insertAlarmID));
@@ -99,6 +127,20 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
         textView.setText(hourOfDay+":"+minute);
         calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
         calendar.set(Calendar.MINUTE,minute);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == RINGTONE_PICKER) {
+                // RINGTONE_PICKERからの選択されたデータを取得する
+                mUri = (Uri) data.getExtras().get(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
+                soundFileName = (TextView) findViewById(R.id.soundFileName);
+                soundFileName.setText(ringtone.getTitle(getApplicationContext()));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }

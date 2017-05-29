@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
                         c.getInt(c.getColumnIndex(DBAdapter.MONTH)),
                         c.getInt(c.getColumnIndex(DBAdapter.DAY)),
                         c.getInt(c.getColumnIndex(DBAdapter.HOUR)),
-                        c.getInt(c.getColumnIndex(DBAdapter.MINUTE))
+                        c.getInt(c.getColumnIndex(DBAdapter.MINUTE)),
+                        c.getString(c.getColumnIndex(DBAdapter.SOUNDFILEPATH))
                 );
 
                 alarmDatas.add(alarmData);

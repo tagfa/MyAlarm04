@@ -1,5 +1,9 @@
 package com.example.tag.myalarm04;
 
+import android.net.Uri;
+
+import java.net.URI;
+
 /**
  * Created by tag on 2017/05/27.
  */
@@ -12,8 +16,10 @@ public class AlarmData {
     private int day;
     private int hour;
     private int minute;
+    private Uri uri;
 
-    public AlarmData(int alarmID,String alarmName,int year,int month,int day,int hour,int minute){
+
+    public AlarmData(int alarmID,String alarmName,int year,int month,int day,int hour,int minute,Uri uri){
         this.alarmID = alarmID;
         this.alarmName = alarmName;
         this.year = year;
@@ -21,6 +27,8 @@ public class AlarmData {
         this.day = day;
         this.hour = hour;
         this.minute = minute;
+        this.uri = uri;
+
     }
 
     public int getYear() {
@@ -51,5 +59,7 @@ public class AlarmData {
         return  alarmName;
     }
 
-
+    public Uri getUri() {
+        return uri;
+    }
 }

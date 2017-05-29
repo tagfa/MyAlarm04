@@ -6,8 +6,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
+
+import java.net.URI;
 
 /**
  * Created by tag on 2017/05/27.
@@ -20,7 +23,7 @@ public class DBAdapter {
     //TBL名
     public static final String TABLE_NAME = "alarm";
     //バージョン
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 2;
 
     //DBのカラム名
     public static final String ALARMID = "_id";
@@ -30,6 +33,7 @@ public class DBAdapter {
     public static final String DAY = "DAY";
     public static final String HOUR = "HOUR";
     public static final String MINUTE = "MINUTE";
+    public static final String URI="URI";
 
     protected Context context;
     protected DatabaseHelper dbHelper;
@@ -62,7 +66,7 @@ public class DBAdapter {
         return db.query(TABLE_NAME, null, null, null, null, null, null);
     }
 
-    public int saveAlarm(String alarmName,int year,int month,int day,int hour,int minute){
+    public int saveAlarm(String alarmName, int year, int month, int day, int hour, int minute, Uri uri){
         ContentValues values = new ContentValues();
 
         values.put(ALARMNAME,alarmName);
@@ -71,6 +75,7 @@ public class DBAdapter {
         values.put(DAY,day);
         values.put(HOUR,hour);
         values.put(MINUTE,minute);
+        values.put(URI,);
 
         long status = db.insert(TABLE_NAME, null, values);
         Cursor c = db.query(TABLE_NAME,
@@ -99,7 +104,8 @@ public class DBAdapter {
                     " (" + ALARMID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + ALARMNAME + " TEXT NOT NULL," + YEAR + " INTEGER NOT NULL,"
                     + MONTH+ " INTEGER NOT NULL,"     + DAY  + " INTEGER NOT NULL,"
-                    + HOUR + " INTEGER NOT NULL,"      + MINUTE + " INTEGER NOT NULL);");
+                    + HOUR + " INTEGER NOT NULL,"      + MINUTE + " INTEGER NOT NULL,"
+                    + URI + " NOT NULL);");
         }
 
         @Override
