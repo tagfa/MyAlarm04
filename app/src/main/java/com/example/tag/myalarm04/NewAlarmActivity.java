@@ -1,6 +1,8 @@
 package com.example.tag.myalarm04;
 
 import android.app.*;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -10,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -105,10 +108,12 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
                         calendar.get(Calendar.DAY_OF_MONTH),
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
-                        mUri);
+                        soundFilePath);
                 dbAdapter.close();
 
                 intent1.setType(String.valueOf(insertAlarmID));
+                intent1.putExtra("soundFilePath",soundFilePath);
+
                 PendingIntent pendingIntent1 = PendingIntent.getActivity(NewAlarmActivity.this,0,intent1,0);
 
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,
@@ -138,10 +143,25 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
                 Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), mUri);
                 soundFileName = (TextView) findViewById(R.id.soundFileName);
                 soundFileName.setText(ringtone.getTitle(getApplicationContext()));
+
+                //soundFilePath = mUri.getPath();
+                soundFilePath=getPath(getApplicationContext());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public String getPath(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+        String[] columns = { MediaStore.Audio.Media.DATA };
+        Cursor cursor = contentResolver.query(mUri, columns, null, null, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(0);
+        cursor.close();
+        return path;
+    }
+
+
 
 }
 

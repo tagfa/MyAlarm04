@@ -16,10 +16,10 @@ public class AlarmData {
     private int day;
     private int hour;
     private int minute;
-    private Uri uri;
+    private String soundFilePath;
 
 
-    public AlarmData(int alarmID,String alarmName,int year,int month,int day,int hour,int minute,Uri uri){
+    public AlarmData(int alarmID,String alarmName,int year,int month,int day,int hour,int minute,String soundFilePath){
         this.alarmID = alarmID;
         this.alarmName = alarmName;
         this.year = year;
@@ -27,7 +27,7 @@ public class AlarmData {
         this.day = day;
         this.hour = hour;
         this.minute = minute;
-        this.uri = uri;
+        this.soundFilePath = soundFilePath;
 
     }
 
@@ -59,7 +59,8 @@ public class AlarmData {
         return  alarmName;
     }
 
-    public Uri getUri() {
-        return uri;
+
+    public String getSoundFilePath() {
+        return soundFilePath;
     }
 }

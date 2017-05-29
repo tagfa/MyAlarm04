@@ -33,7 +33,7 @@ public class DBAdapter {
     public static final String DAY = "DAY";
     public static final String HOUR = "HOUR";
     public static final String MINUTE = "MINUTE";
-    public static final String URI="URI";
+    public static final String SOUNDFILEPATH="SOUNDFILEPATH";
 
     protected Context context;
     protected DatabaseHelper dbHelper;
@@ -66,7 +66,7 @@ public class DBAdapter {
         return db.query(TABLE_NAME, null, null, null, null, null, null);
     }
 
-    public int saveAlarm(String alarmName, int year, int month, int day, int hour, int minute, Uri uri){
+    public int saveAlarm(String alarmName, int year, int month, int day, int hour, int minute, String soundFilePath){
         ContentValues values = new ContentValues();
 
         values.put(ALARMNAME,alarmName);
@@ -75,7 +75,7 @@ public class DBAdapter {
         values.put(DAY,day);
         values.put(HOUR,hour);
         values.put(MINUTE,minute);
-        values.put(URI,);
+        values.put(SOUNDFILEPATH,soundFilePath);
 
         long status = db.insert(TABLE_NAME, null, values);
         Cursor c = db.query(TABLE_NAME,
@@ -105,7 +105,7 @@ public class DBAdapter {
                     + ALARMNAME + " TEXT NOT NULL," + YEAR + " INTEGER NOT NULL,"
                     + MONTH+ " INTEGER NOT NULL,"     + DAY  + " INTEGER NOT NULL,"
                     + HOUR + " INTEGER NOT NULL,"      + MINUTE + " INTEGER NOT NULL,"
-                    + URI + " NOT NULL);");
+                    + SOUNDFILEPATH + " TEXT NOT NULL);");
         }
 
         @Override
