@@ -25,12 +25,6 @@ public class TimePickerDialog extends DialogFragment implements android.app.Time
         return timePickerDialog;
     }
 
-
-
-
-
-
-
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 

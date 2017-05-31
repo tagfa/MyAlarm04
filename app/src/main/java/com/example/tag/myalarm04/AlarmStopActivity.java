@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.io.IOException;
 
 /**
+ * アラーム起動時のクラス
  * Created by tag on 2017/05/27.
  */
 
@@ -21,20 +22,27 @@ public class AlarmStopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stop_alarm);
 
         Intent intent = getIntent();
+
+        //インテントからアラーム音のファイルパスを取得する
         String soundFilePath = intent.getStringExtra("soundFilePath");
 
         mp = new MediaPlayer();
-        try {
-            mp.setDataSource(soundFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if(soundFilePath.equals("")==false) {
+
+            try {
+                mp.setDataSource(soundFilePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                mp.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mp.setLooping(true);
+            mp.start();
         }
-        try {
-            mp.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mp.start();
 
     }
 
@@ -42,6 +50,14 @@ public class AlarmStopActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mp.stop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mp.isPlaying()==true){
+            mp.stop();
+        }
+        mp.release();
     }
 }

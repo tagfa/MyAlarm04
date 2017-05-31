@@ -17,6 +17,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ *  一覧画面表示用のクラス
+ *  Created by tag on 2017/05/27.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private AlarmListAdapter alarmListAdapter;
@@ -26,35 +32,34 @@ public class MainActivity extends AppCompatActivity {
     private ListView alarmListView;
     protected AlarmData alarmData;
 
-
-
     private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this,"onCreate",Toast.LENGTH_SHORT).show();
         dbAdapter = new DBAdapter(this);
 
         alarmDatas = new ArrayList<>();
-
         alarmListAdapter = new AlarmListAdapter(this, alarmDatas);
-
         alarmListView = (ListView) findViewById(R.id.alarmList);
 
+        //アラームデータをDBから読み込み、表示
         loadAlarm();
 
+        //アラーム新規作成時の処理
         Button newAlarmButton = (Button)findViewById(R.id.newAlarmButton);
         newAlarmButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                //アラーム作成画面へ遷移
                 intent = new Intent(MainActivity.this,NewAlarmActivity.class);
                 startActivity(intent);
 
             }
         });
 
+        //項目長押し時の処理
         alarmListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        // IDを取得する
+                        // アラームIDを取得する
                         alarmData = alarmDatas.get(position);
                         int deleteAlarmId = alarmData.getAlarmID();
 
@@ -104,13 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Toast.makeText(this,"onResume",Toast.LENGTH_SHORT).show();
+        //アラーム一覧を取得しなおす
         dbAdapter = new DBAdapter(this);
 
         alarmDatas = new ArrayList<>();
-
         alarmListAdapter = new AlarmListAdapter(this, alarmDatas);
-
         alarmListView = (ListView) findViewById(R.id.alarmList);
 
         loadAlarm();
@@ -118,14 +121,16 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    //アラームデータをDBから読み込み、表示
     protected void loadAlarm(){
-        // Read
         alarmDatas.clear();
         dbAdapter.open();
         Cursor c = dbAdapter.getAllAlarm();
 
         if(c.moveToFirst()){
+
             do {
+                //1レコード取得する
                 AlarmData alarmData = new AlarmData(
                         c.getInt(c.getColumnIndex(DBAdapter.ALARMID)),
                         c.getString(c.getColumnIndex(DBAdapter.ALARMNAME)),
@@ -137,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         c.getString(c.getColumnIndex(DBAdapter.SOUNDFILEPATH))
                 );
 
+                //リストに追加
                 alarmDatas.add(alarmData);
             } while(c.moveToNext());
         }
