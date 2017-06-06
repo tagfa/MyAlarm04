@@ -59,7 +59,7 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
         inputTimeTextView = (TextView)findViewById(R.id.inputTime);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        inputTimeTextView.setText(hour+":"+String.format("%2d",minute));
+        inputTimeTextView.setText(hour+":"+String.format("%02d",minute));
 
         //当日の日付を初期値として設定
         inputDateTextView = (TextView)findViewById(R.id.inputDate);
@@ -164,7 +164,7 @@ public class NewAlarmActivity extends AppCompatActivity implements android.app.T
     //選択時刻をTextViewとカレンダーに設定
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        inputTimeTextView.setText(hourOfDay+":"+String.format("%2d",minute));
+        inputTimeTextView.setText(hourOfDay+":"+String.format("%02d",minute));
         calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
         calendar.set(Calendar.MINUTE,minute);
     }
