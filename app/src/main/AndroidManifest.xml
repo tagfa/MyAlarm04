@@ -24,8 +24,8 @@
         <activity android:name=".AlarmStopActivity"
             android:screenOrientation="portrait"/>
 
-        <receiver android:name=".bootReceiver">
-            <intent-filter >
+        <receiver android:name=".BootReceiver">
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED">
                 </action>
             </intent-filter>
