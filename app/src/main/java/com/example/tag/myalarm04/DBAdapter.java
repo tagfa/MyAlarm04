@@ -50,7 +50,8 @@ public class DBAdapter {
         return this;
     }
     public void close(){
-        dbHelper.close(); }
+        dbHelper.close();
+    }
 
 
     // // App Methods //
